@@ -1,24 +1,50 @@
 :root {
     --main: rgb(52, 152, 219);
+    --main-gray: #eee;
   }
 
 
 *, *:before, *:after {
     box-sizing: border-box;
   }
+  
 
-
-
-.header {
-    position: fixed;
+#header {
+    
     font-size: 5em;
     font-weight: 500;
     color: var(--main);
+    background-color: var(--main-gray);
     border-radius: 0px;
+
+    
 }
 
-.search {
+#search {
     background-color: var(--main);
     color: white;
 }
+
+@media (max-width: 767px){
+    #header {
+        text-align: center;
+    }
+
+    #centerform {
+        margin: 0px auto 0px auto;
+        text-align: center;
+    }
+   
+}
+
+#tabletop {
+    text-align: center;
+    color: var(--main);
+    background-color: var(--main-gray);
+    margin-top: -50px;
+    padding: none;
+    
+}
+
+
 
