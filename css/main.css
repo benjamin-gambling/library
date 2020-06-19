@@ -1,0 +1,24 @@
+:root {
+    --main: rgb(52, 152, 219);
+  }
+
+
+*, *:before, *:after {
+    box-sizing: border-box;
+  }
+
+
+
+.header {
+    position: fixed;
+    font-size: 5em;
+    font-weight: 500;
+    color: var(--main);
+    border-radius: 0px;
+}
+
+.search {
+    background-color: var(--main);
+    color: white;
+}
+
