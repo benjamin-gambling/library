@@ -7,6 +7,11 @@
 *, *:before, *:after {
     box-sizing: border-box;
   }
+
+html {
+    background-color: var(--main-gray);
+
+}
   
 
 #header {
@@ -43,8 +48,23 @@
     background-color: var(--main-gray);
     margin-top: -50px;
     padding: none;
+    border-bottom: 1px solid rgba(52, 152, 219, 0.164);
     
 }
+
+#table {
+    text-align: center;
+    color: var(--main);
+    background-color: var(--main-gray);
+    padding-top: 10px;
+    border-bottom: 1px solid rgba(52, 152, 219, 0.164);
+}
+
+#trashcan, #read {
+    font-size: 16px;
+}
+
+
 
 
 
