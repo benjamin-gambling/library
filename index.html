@@ -13,16 +13,82 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>      
     </head>
     <body>
+        <div id="add-background" class="hidden">
+        <form id="add-form" >
+            <div id="addHeader" class="container-fluid">
+               <div class="row">
+                   <div class="col-xs-10">
+                       <h4 id="headerTitle">ADD NEW BOOK</h4>
+                   </div>
+                   <div class="col-xs-2">
+                    <button type="button" id="closeAdd" class="btn"><i class="las la-times"></i></button>
+                   </div>
+               </div>
+            </div>
+        
+            <div class="addInput">
+                <div class="form-group">
+                    <label for="addTitle">Title</label>
+                    <input type="text" class="form-control" id="addTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="addAuthor">Author</label>
+                    <input type="text" class="form-control" id="addAuthor" required>
+                </div>
+                <div class="form-group">
+                    <label for="addPages">Pages</label>
+                    <input type="number" class="form-control" id="addPages">
+                </div>
+                <br>
+                <div class="form-check form-check-inline">
+                    <label for="addPages">Have you read this book?</label>
+                    <div>
+                    <input class="form-check-input" type="radio" name="read" id="addNotRead" value="not read" checked>
+                    <label class="form-check-label" for="addNotRead">No</label>
+                    &nbsp;
+                    <input class="form-check-input" type="radio" name="read" id="addRead" value="read">
+                    <label class="form-check-label" for="addRead">Yes</label>
+                    </div>
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="rating">Rating</label>
+                    <div class="rating">
+                        <input type="radio" name="rating" value="5" id="5">
+                        <label for="5">☆</label> 
+                        <input type="radio" name="rating" value="4" id="4">
+                        <label for="4">☆</label> 
+                        <input type="radio" name="rating" value="3" id="3">
+                        <label for="3">☆</label> 
+                        <input type="radio" name="rating" value="2" id="2">
+                        <label for="2">☆</label> 
+                        <input type="radio" name="rating" value="1" id="1" >
+                        <label for="1">☆</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="addComments">Comments</label>
+                    <textarea class="form-control" id="addComments" rows="4"></textarea>
+                </div>
+            </div>
+            <div id="addFooter" class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-7">
+                    </div>
+                    <div class="col-xs-3">
+                        <button type="submit" id="saveAdd" class="btn">SAVE BOOK</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        </div>
         <div id="header" class="container-fluid navbar navbar-expand-lg  bg-light">
-            <div class="row no-gutters jumbotron title">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
+            <div id="title" class="row no-gutters jumbotron ">
+                <div class="col-xs-8 col-sm-9 col-md-9 col-lg-10 align-middle">
                     <h1><i class="book-icon las la-book"></i>BENS BOOKS</h1>
                 </div>
-                <div id="centerform" class="col-xs col-sm-8 col-md-10 col-lg-4 ">
-                    <form  class="form-inline my-2 my-sm-0">
-                        <input id="inputlength" class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-                        <button id="search" class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                      </form>
+                <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1"></div>
+                    <button type="button" id="add" class="btn"><i class="las la-plus"></i></button>
                 </div>
             </div>
         </div>
@@ -45,25 +111,7 @@
                 </div>
             </div>
         </div>
-        <div id="table" class="container-fluid">
-            <div class="row no-gutters">
-                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                    <p>Harry Potter and the Chamber of Secrets</p>
-                </div>
-                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                    <p>J.K.Rowling</p>
-                </div>
-                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                    <p>597</p>
-                </div>
-                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                    <p id="read"><i class="las la-times text-danger"></i></p>
-                </div>
-                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                    <p id="trashcan"><i class="lar la-trash-alt text-danger"></i></p>
-                </div>
-            </div>
-        </div>
+        <div id="table" class="container-fluid"></div>
     <script type="text/javascript" src="script.js"></script>
     </body>
 </html> 
