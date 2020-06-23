@@ -42,14 +42,22 @@ const getRating = () => {
         if(rating[i].checked){
             return rating[i].value
         }
+        if(!rating[rating.length - 1].checked){
+            return "0"
+        }
     }
 }
 
 addBtn.addEventListener("click", addBook)
 closeBtn.addEventListener("click", closeAddBook)
 
-// create an array to store the table of books (bookshelf)
+
+// create an empty string to store my database (library) 
+let library = ""
+
+// create an array to store the table of books (bookshelf) and a list tokeey the keys
 let bookshelf = []
+let booklist = []
 
 //book constructor function 
 function Book(title, author, pages, read, rating, comments, id) {
@@ -59,7 +67,7 @@ function Book(title, author, pages, read, rating, comments, id) {
     this.read = read
     this.rating = rating
     this.comments = comments
-    this.id = "book-"+ (bookshelf.length + 1)
+    this.id = id
 }
 
 // check if book has been read 
@@ -87,39 +95,51 @@ const createBook = () => {
     let read = readOrNot()
     let rating = getRating()
     let comments = addComments.value
-    return (new Book(title, author, pages, read, rating, comments))
+    let id = "book-"+ (bookshelf.length + 1)
+    return (new Book(title, author, pages, read, rating, comments, id))
+    
 }
 
-const writeBook = book => {
+const writeBook = (book, i) => {
 let row = document.createElement('div')
 row.classList.add("row")
 row.classList.add("no-gutters")
-row.id = "book-"+ bookshelf.length
+row.id = "book-"+ [i + 1]
+
+//These need to be done in order due to objects not storing data in order inputted instead they are sorted alphabetically
+//Append title colum to row
+let titleDIV = document.createElement('div')
+titleDIV.classList.add("col-xs-4", "col-sm-4", "col-md-4", "col-lg-4")
+row.appendChild(titleDIV)
+
+//Append author column to row
+let authorDIV = document.createElement('div')
+authorDIV.classList.add("col-xs-2", "col-sm-2", "col-md-2", "col-lg-2")
+row.appendChild(authorDIV)
+
+//Append pages column to row
+let pagesDIV = document.createElement('div')
+pagesDIV.classList.add("col-xs-2", "col-sm-2", "col-md-2", "col-lg-2")
+row.appendChild(pagesDIV)
+
+//Append read colum to row
+let readDIV = document.createElement('div')
+readDIV.classList.add("col-xs-2", "col-sm-2", "col-md-2", "col-lg-2")
+
 for (let [key, value] of Object.entries(book)) {
     if(key === "title"){
-        let titleDIV = document.createElement('div')
         titleDIV.innerHTML = value
-        titleDIV.classList.add("col-xs-4", "col-sm-4", "col-md-4", "col-lg-4")
-        row.appendChild(titleDIV)
         continue
     }
     if(key === "author"){
-        let authorDIV = document.createElement('div')
         authorDIV.innerHTML = value
-        authorDIV.classList.add("col-xs-2", "col-sm-2", "col-md-2", "col-lg-2")
-        row.appendChild(authorDIV)
         continue
     }
     if(key === "pages"){
-        let pagesDIV = document.createElement('div')
         pagesDIV.innerHTML = value
-        pagesDIV.classList.add("col-xs-2", "col-sm-2", "col-md-2", "col-lg-2")
-        row.appendChild(pagesDIV)
         continue
     }
     if(key === "read"){
-        let readDIV = document.createElement('div')
-        readDIV.classList.add("col-xs-2", "col-sm-2", "col-md-2", "col-lg-2")
         let button = readIcon(value)
         readDIV.appendChild(button)
         row.appendChild(readDIV)
@@ -143,7 +163,13 @@ const reassignId = () => {
     let nodes = table.childNodes
     for(let i = 0; i < nodes.length; i++){
         nodes[i].id = "book-"+ [i + 1] //assigns element new id
-        bookshelf[i].id = "book-"+ [i + 1] //assigns object new id 
+
+        let key = booklist[i]
+        let updateDB = firebase.database().ref("BOOKS/" + key)
+
+        updateDB.update({
+            id: "book-"+ [i + 1]
+        })
     }
 }
 
@@ -154,35 +180,43 @@ addForm.addEventListener('submit', (e) => {
     e.preventDefault()
     // 2. Create new book with values submitted 
     let newBook = createBook()
-    // 3. push new book to the bookshelf array 
-    bookshelf.push(newBook)
+    // 3. push to database
+    addDB(newBook)
     // 4. create book element to display in table 
-    writeBook(newBook)
+    renderDB(bookshelf)
     // 5. clear and close form 
     addForm.reset()
     closeAddBook()
 })
 
+
+
+
 // apply event listeners to all elements to toggle read and delete
 document.addEventListener('click', e => {
-    let id = e.target.parentNode.parentNode.parentNode.id // book-[i]
-    let book = bookshelf.find(book => book.id == id)
+    
 
     // Delete element 
     if(e.target.className === "las la-trash-alt text-danger"){
+        let id = e.target.parentNode.parentNode.parentNode.id // book-[i]
+        let book = bookshelf.find(book => book.id == id)
+        let index = bookshelf.indexOf(book)
+        let key = booklist[index]
+        let updateDB = firebase.database().ref("BOOKS/" + key)
+
         if (confirm("Are you sure you want to remove this book from the library?")) {
-            //remove from array 
-            let index = bookshelf.indexOf(book)
-            bookshelf.splice(index, 1)
-            //remove element
-            let bookElement = document.getElementById(id)
-            table.removeChild(bookElement)  
-            reassignId();
+            updateDB.remove()
         }
     }
 
     // Toggle between read and unread
     if(e.target.className === "las la-check text-success" || e.target.className === "las la-times text-danger"){
+        let id = e.target.parentNode.parentNode.parentNode.id // book-[i]
+        let book = bookshelf.find(book => book.id == id)
+        let index = bookshelf.indexOf(book)
+        let key = booklist[index]
+        let updateDB = firebase.database().ref("BOOKS/" + key)
+        
         if(book.read !== "read"){
             book.read = "read"
         } else if (book.read === "read"){
@@ -194,30 +228,77 @@ document.addEventListener('click', e => {
         } else {
             icon.className = "las la-times text-danger"
         }
+
+        updateDB.update({
+            read: book.read
+        })
     }
 })
 
-const populateArray = () => {
-    let bookdelivery = [
-    ["A Game of Thrones", "George R.R. Martin", 694],
-    ["A Clash of Kings", "George R.R. Martin", 768],
-    ["A Storm of Swords", "George R.R. Martin", 973],
-    ["A Feast for Crows", "George R.R. Martin", 753],
-    ["Treasure Island", "Robert Louis Stevenson", ""],
-    ["Nineteen Eighty-Four", "George Orwell", 328],
-    ["To Kill a Mockingbird", "Harper Lee", 281],
-    ["Hamlet", "William Shakespeare", 500],
-    ["20,000 Leagues Under the Sea", "Jules Verne", 426],
-    ["Journey to the Center of the Earth", "Jules Verne", 183],
-    ["Adventures of Hucklebery Finn", "Mark Twain", 366]
-    ]
-    
-    for(let i = 0; i < bookdelivery.length; i++){
-        let newbook = new Book(bookdelivery[i][0], bookdelivery[i][1], bookdelivery[i][2])
-        bookshelf.push(newbook)
-        writeBook(newbook)
+
+    //FIREBASE DATABASE CODE
+
+    // Get a reference to the database service
+    const database = firebase.database().ref();
+
+    // Create a child of the database called BOOKS
+    const dbBooks = database.child('BOOKS')
+
+    // Pull from database and render
+    const renderDB = bookshelf => {
+        table.innerHTML = ""
+        for(let i = 0; i < bookshelf.length; i++){
+            console.log(bookshelf[i], i)
+            writeBook(bookshelf[i], i)
+        }
     }
-  }
 
-  window.addEventListener("load", populateArray())
+    // Add book to database
+    const addDB = (book) => {
+        const autoId = dbBooks.push().key
+        dbBooks.child(autoId).set({
+            title: book.title,
+            author: book.author,
+            pages: book.pages,
+            read: book.read,
+            rating: book.rating,
+            comments: book.comments,
+            id: book.id
+        })
+    }
 
+    //when database updates page updates 
+    // (could also leave this as page interacts instantly and then just display on refresh/relaod)
+    dbBooks.on('value', snap => {
+        // library updates whenever database is changed
+        library = snap.val()
+        //library is put into array 
+        bookshelf = Object.values(library)
+        booklist = Object.keys(library)
+        //update display + book-[i]
+        renderDB(bookshelf)
+        reassignId()
+    }) 
+
+
+    //other methods that can be used to be more effiecnet (will follow up)
+    dbBooks.on('child_changed', snap => {
+        
+    })
+
+    dbBooks.on('child_removed', snap => {
+
+    })
+
+    dbBooks.on('child_added', snap => {
+
+    })
+    
+
+
+    
+
+
+    
+
+    

@@ -161,6 +161,14 @@ textarea {
             filter: blur(5px);
   }
 
+  button:hover {
+      opacity: 0.75;
+  }
+
+  button:active {
+      transform: scale(1.05);
+  }
+
 /* Rating code taken from https://bbbootstrap.com/snippets/star-rating-pure-css-19646372 */
 
 .rating {
