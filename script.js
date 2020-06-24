@@ -270,14 +270,28 @@ document.addEventListener('click', e => {
     //when database updates page updates 
     // (could also leave this as page interacts instantly and then just display on refresh/relaod)
     dbBooks.on('value', snap => {
-        // library updates whenever database is changed
-        library = snap.val()
-        //library is put into array 
-        bookshelf = Object.values(library)
-        booklist = Object.keys(library)
-        //update display + book-[i]
-        renderDB(bookshelf)
-        reassignId()
+        if(snap.val() === null){
+            bookshelf = [{
+                author: "Benjamin Gambling", 
+                comments: "Bread Making Book", 
+                id: "book-1", 
+                pages: "69", 
+                read: "read",
+                rating: "5",
+                title: "Bens Buns"
+                }]
+            renderDB(bookshelf)
+        } else {
+            // library updates whenever database is changed
+            library = snap.val()
+            //library is put into array 
+            bookshelf = Object.values(library)
+            booklist = Object.keys(library)
+            //update display + book-[i]
+            renderDB(bookshelf)
+            reassignId()
+        }
+        
     }) 
 
 
