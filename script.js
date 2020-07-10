@@ -60,7 +60,8 @@ let bookshelf = []
 let booklist = []
 
 //book constructor function 
-function Book(title, author, pages, read, rating, comments, id) {
+class Book {
+    constructor(title, author, pages, read, rating, comments, id) {
     this.title = title
     this.author = author
     this.pages = pages
@@ -68,6 +69,7 @@ function Book(title, author, pages, read, rating, comments, id) {
     this.rating = rating
     this.comments = comments
     this.id = id
+    }
 }
 
 // check if book has been read 
@@ -248,7 +250,6 @@ document.addEventListener('click', e => {
     const renderDB = bookshelf => {
         table.innerHTML = ""
         for(let i = 0; i < bookshelf.length; i++){
-            console.log(bookshelf[i], i)
             writeBook(bookshelf[i], i)
         }
     }
